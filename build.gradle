@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'idea'
+}
+
+
+// gradle engine --args "1234 engine1"
+task engine(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'engine.ComputeEngine'
+    standardInput = System.in
+}
+task loadbalancer(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'observer.LoadbalancerServer'
+    standardInput = System.in
+}
+
+// e.g.: gradle computePi --args="localhost 1234"
+task computePi(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'client.ComputePi'
+}
+// e.g.: gradle computeFib --args="localhost 1234"
+task computeFib(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'client.ComputeFib'
+}
+
+dependencies {
+    compile 'com.google.guava:guava:23.0'
+    testCompile 'junit:junit:4.12'
+}
+
+repositories {
+    jcenter()
+}
