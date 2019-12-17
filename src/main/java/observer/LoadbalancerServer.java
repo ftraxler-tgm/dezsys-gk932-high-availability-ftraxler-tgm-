@@ -8,30 +8,42 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import compute.Compute;
 import compute.Task;
-import engine.ComputeEngine;
 
 public class LoadbalancerServer implements Loadbalancer,Compute {
 
-    private List<Compute> roundRobin;
+    private List<Compute> serverList;
+    private Map<Compute,Integer> weightList;
+    private Map<Compute,Integer> leastConnection;
     private Iterator<Compute> it;
+    private boolean roundRobinOrLeastConnection = false;
+
+    private Integer position = 0;
 
 
-    public LoadbalancerServer(){
+    public LoadbalancerServer(boolean loadBalancerAlg){
         super();
-        roundRobin= new ArrayList<Compute>();
-        it = this.roundRobin.iterator();
+        this.roundRobinOrLeastConnection = loadBalancerAlg;
+        serverList= new ArrayList<Compute>();
+        weightList = new HashMap<Compute,Integer>();
+        leastConnection = new HashMap<Compute,Integer>();
+        System.out.println("Weighted Round-Robin: "+roundRobinOrLeastConnection);
+        System.out.println("Weighted Least-Connection: "+!(roundRobinOrLeastConnection));
+
     }
 
 
-    public void registerServer(Compute e)
+
+    public void registerServer(Compute e,Integer weight)
     {
 
-        System.out.println("Server registered "+roundRobin.add(e));
-        System.out.println("Number of engines:"+roundRobin.size());
+        System.out.println("Server registered "+ serverList.add(e)+ "with weight: "+weight);
+        weightList.put(e,weight);
+        leastConnection.put(e,0);
+        System.out.println("Number of engines:"+ serverList.size());
 
     }
     public void removeServer(Compute stub){
-       this.roundRobin.remove(stub);
+       this.serverList.remove(stub);
        System.out.println("Server removed");
 
 
@@ -50,7 +62,7 @@ public class LoadbalancerServer implements Loadbalancer,Compute {
 
             Registry registryLb = LocateRegistry.createRegistry(1099);
 
-            Compute loadbalancer = new LoadbalancerServer();
+            Compute loadbalancer = new LoadbalancerServer(Boolean.parseBoolean(args[0]));
 
 
 
@@ -68,20 +80,75 @@ public class LoadbalancerServer implements Loadbalancer,Compute {
 
 
     }
+    private void connectionStatus(Compute e,Integer i){
+        int aktuellerWert = leastConnection.get(e);
+        aktuellerWert += i;
+        leastConnection.replace(e,aktuellerWert);
+    }
 
     @Override
     public <T> T executeTask(Task<T> t) throws RemoteException {
         System.out.println("Selecting Server...");
-        System.out.println(roundRobin.isEmpty());
 
 
+        if(roundRobinOrLeastConnection){
+            List<Compute> liste = new ArrayList<>();
+            Iterator<Compute> iterator = serverList.iterator();
+            while (iterator.hasNext()) {
+                Compute serverItem = iterator.next();
+                Integer weight = weightList.get(serverItem);
+                if (weight > 0) {
+                    for (int i = 0; i < weight; i++) {
+                        liste.add(serverItem);
+                    }
+                }
 
-        if (it.hasNext()) {
-            return it.next().executeTask(t);
-        }else{
-            return null;
+            }
+            if (position > liste.size()) {
+                position = 0;
+            }
+
+            return liste.get(position++).executeTask(t);
+
+        }
+
+        System.out.println("Starting Calculation....");
+        for (Integer value : leastConnection.values()) {
+            System.out.println("Value: " + value);
         }
 
 
+        Compute smallest=null;
+        int min = Integer.MAX_VALUE;
+        for(Compute key : leastConnection.keySet()) {
+            int value = leastConnection.get(key);
+            if(value < min) {
+                min = value;
+                smallest = key;
+            }
+        }
+        connectionStatus(smallest,1);
+
+
+        System.out.println("-----------------");
+        for (Integer value : leastConnection.values()) {
+            System.out.println("value: " + value);
+        }
+        T object = smallest.executeTask(t);
+
+        connectionStatus(smallest,-1);
+        System.out.println("-----------------");
+        for (Integer value : leastConnection.values()) {
+            System.out.println("value: " + value);
+        }
+        System.out.println("-----------------");
+        return object;
+
+
+
+
+
     }
+
+
 }

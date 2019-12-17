@@ -16,5 +16,5 @@ import java.rmi.RemoteException;
 
 public interface Loadbalancer extends Remote {
 	public void removeServer(Compute stub) throws RemoteException;
-	public void  registerServer(Compute e) throws RemoteException;
+	public void  registerServer(Compute e,Integer weight) throws RemoteException;
 }
