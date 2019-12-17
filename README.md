@@ -56,7 +56,44 @@ Verlgeichen Sie die verwendeten Load Balancing Methoden und stellen Sie diese ge
 + Gegenüberstellung der angewendeten Load Balancing Methoden
 + Durchführen & dokumentieren der Belastungstests (RAM/CPU)
 
+## Implementierung
+
+Als Basis habe ich die RMI Aufgabe von letztem Jahr verwendet.https://github.com/ftraxler-tgm/syt4-gk833-rmi-taskloadbalancer-ftraxler-tgm
+
+Ich hab sie so erweitert, dass sich eine Engine immer mit ihrer Gewichtung registrieren muss, weil die Engine nicht weiß was für Load Balancing Methode benutzt wird.
+
+### Weighted Round Robin
+
+Jede Engine hat eine Gewichtung die angibt wie viele Anfragen der Server bekommt bevor. Wenn Server 1 zum Beispiel eine Gewichtung von 5 hat und der Server 2 eine von 2 landen die ersten fünf Anfragen bei Server 1 und die darauf folgenden Anfragen an Server 2.
+
+Der Algorithmus schaut wie folgt aus:
+
+```java
+	//Es wird eine neue Liste erstellt und je nachdem wie hoch die Gewichtung ist, wird die 	Engine dementsprechend oft der Liste hinzugefügt.
+	List<Compute> liste = new ArrayList<>();
+    Iterator<Compute> iterator = serverList.iterator();
+    while (iterator.hasNext()) {
+        Compute serverItem = iterator.next();
+        Integer weight = weightList.get(serverItem);
+        if (weight > 0) {
+            for (int i = 0; i < weight; i++) {
+                liste.add(serverItem);
+            }
+        }
+
+    }
+    if (position > liste.size()) {
+        position = 0;
+    }
+    return liste.get(position++).executeTask(t);
+```
+
+### Least-Connections
+
+Die Methode funktioniert so, dass immer die Engine mit den geringsten aktiven Verbindungen ausgewählt wird.
+
 
 ## Quellen
 * [Comparing Load Balancing Algorithms](https://www.jscape.com/blog/load-balancing-algorithms)
 * [Java RMI Tutorial - PI Calculation](https://docs.oracle.com/javase/tutorial/rmi/overview.html)
+* [Weighted Round Robin](https://medium.com/@wolfbang/load-balance-algorithm-with-java-e7fb55fe788a)
