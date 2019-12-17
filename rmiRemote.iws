@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4a43aa38-2ace-46f4-b72d-55104a4c89e9" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rmiRemote.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/rmiRemote.ipr" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rmiRemote.iws" beforeDir="false" afterPath="$PROJECT_DIR$/rmiRemote.iws" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/engine/ComputeEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/engine/ComputeEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/observer/Loadbalancer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/observer/Loadbalancer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/observer/LoadbalancerServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/observer/LoadbalancerServer.java" afterDir="false" />
-    </list>
+    <list default="true" id="4a43aa38-2ace-46f4-b72d-55104a4c89e9" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -162,7 +155,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1576589083132</updated>
-      <workItem from="1576589085542" duration="7890000" />
+      <workItem from="1576589085542" duration="8325000" />
     </task>
     <servers />
   </component>

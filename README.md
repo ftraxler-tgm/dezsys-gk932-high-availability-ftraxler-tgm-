@@ -90,7 +90,34 @@ Der Algorithmus schaut wie folgt aus:
 
 ### Least-Connections
 
-Die Methode funktioniert so, dass immer die Engine mit den geringsten aktiven Verbindungen ausgewählt wird.
+Die Methode funktioniert so, dass immer die Engine mit den geringsten aktiven Verbindungen ausgewählt wird. Deshalb habe ich eine Liste erstellt, welche die aktuellen Verbindungen jeder Engine enthält. Mithilfe dieser Liste habe ich dann berechnet welche Engine die geringsten Verbindungen hat:
+
+```java
+Compute smallest=null; // Die Variable für die kleinste Engine
+int min = Integer.MAX_VALUE;
+for(Compute key : leastConnection.keySet()) {
+    int value = leastConnection.get(key);
+    if(value < min) {
+        min = value;
+        smallest = key;
+    }
+}
+T object = smallest.executeTask(t); //Task ausführen
+```
+
+"Smallest" entspricht der Engine mit den geringsten aktuellen Verbindungen, auf dieser wird der Task dann ausgeführt. 
+
+#### Fragen:
+
+Verlgeichen Sie die verwendeten Load Balancing Methoden und stellen Sie diese gegenüber.
+
++ Was kann als Gewichtung bei Weighted Round Robin verwendet werden?
++ Warum stellt die "Hochverfügbarkeit" von IT Systemen in der heutigen Zeit eine sehr wichtige Eigenschaft dar?
++ Welche anderen Massnahmen neben einer Lastverteilung müssen getroffen werden, um die "Hochverfügbarkeit" sicher zu stellen?
++ Was versteht man unter "Session Persistenz" und welche Schwierigkeiten ergeben sich damit?
++ Nennen Sie jeweils ein Beispiel, wo Session Persistenz notwendig bzw. nicht notwendig ist.
++ Welcher Unterschied besteht zwischen einer "server-side" bzw "client-side" Lastverteilungslösung?
++ Was versteht man unter dem "Mega-Proxy-Problem"?
 
 
 ## Quellen
