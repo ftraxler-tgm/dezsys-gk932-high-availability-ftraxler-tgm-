@@ -40,21 +40,25 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-
+import java.sql.Timestamp;
 
 
 public class ComputeEngine implements Compute {
     private String id = "";
+    private static Integer weight = 0;
 
-    public ComputeEngine(String id) {
+    public ComputeEngine(String id,Integer w) {
         super();
         this.id=id;
+        weight=w;
+        System.out.println("Initialisiert..."+this.id+" with Weigth: "+weight);
+
 
     }
 
-
     public <T> T executeTask(compute.Task<T> t) {
-        System.out.println("Calculating..."+this.id);
+
+        System.out.println("Calculating..."+this.id+" Time:"+ new Timestamp(System.currentTimeMillis()).toString());
         return t.execute();
     }
 
@@ -63,7 +67,7 @@ public class ComputeEngine implements Compute {
             System.setSecurityManager(new SecurityManager());
         }
 
-        Compute engine = new ComputeEngine(args[0]);
+        Compute engine = new ComputeEngine(args[0],Integer.parseInt(args[1]));
 
 
         try {
@@ -76,7 +80,7 @@ public class ComputeEngine implements Compute {
             Registry registry = LocateRegistry.getRegistry(1099);
             Loadbalancer lb = (Loadbalancer) registry.lookup(name);
 
-            lb.registerServer(stub);
+            lb.registerServer(stub,weight);
 
 
 
